@@ -4,4 +4,6 @@ language: csharp
 services:
   - docker
 script: 
-  - docker build -t travistest:v1 .
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+  - docker build -t $DOCKER_USERNAME/asprakendus:v1 .
+  - docker push $DOCKER_USERNAME/asprakendus:v1
