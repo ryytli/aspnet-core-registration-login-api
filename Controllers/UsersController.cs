@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Authorization;
 using WebApi.Services;
 using WebApi.Dtos;
 using WebApi.Entities;
+using Serilog;
 
 namespace WebApi.Controllers
 {
@@ -23,7 +24,7 @@ namespace WebApi.Controllers
         private IUserService _userService;
         private IMapper _mapper;
         private readonly AppSettings _appSettings;
-
+        
         public UsersController(
             IUserService userService,
             IMapper mapper,
@@ -32,6 +33,11 @@ namespace WebApi.Controllers
             _userService = userService;
             _mapper = mapper;
             _appSettings = appSettings.Value;
+
+            Log.Logger = new LoggerConfiguration().MinimumLevel.Debug()
+                .WriteTo.Console()
+                .WriteTo.File("logs\\myapp.txt", rollingInterval: RollingInterval.Day)
+                .CreateLogger();
         }
 
         [AllowAnonymous]
@@ -41,7 +47,10 @@ namespace WebApi.Controllers
             var user = _userService.Authenticate(userDto.Username, userDto.Password);
 
             if (user == null)
+            {
+                Log.Information("Username or password is incorrect");
                 return BadRequest(new { message = "Username or password is incorrect" });
+            }
 
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
@@ -78,6 +87,7 @@ namespace WebApi.Controllers
             {
                 // save 
                 _userService.Create(user, userDto.Password);
+                Log.Information("User has registered hhh");
                 return Ok();
             } 
             catch(AppException ex)
