@@ -5,5 +5,7 @@ services:
   - docker
 script: 
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-  - docker build -t $DOCKER_USERNAME/asprakendus:v1 .
-  - docker push $DOCKER_USERNAME/asprakendus:v1
+  - docker build -t asprakendus .
+  - docker images
+  - docker tag asprakendus $DOCKER_USERNAME/asprakendus
+  - docker push $DOCKER_USERNAME/asprakendus
