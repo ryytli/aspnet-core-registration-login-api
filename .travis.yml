@@ -5,7 +5,7 @@ services:
   - docker
 script: 
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-  - docker build -t asprakendus .
+  - docker build -t aspnet .
   - docker images
-  - docker tag asprakendus $DOCKER_USERNAME/asprakendus
-  - docker push $DOCKER_USERNAME/asprakendus
+  - docker tag aspnet $DOCKER_USERNAME/aspnet
+  - docker push $DOCKER_USERNAME/aspnet
