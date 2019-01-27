@@ -13,5 +13,5 @@ RUN dotnet publish -c Release -o out
 FROM microsoft/dotnet:2.2-aspnetcore-runtime AS runtime
 WORKDIR /source
 COPY --from=build /source/out ./
-EXPOSE 8080
+EXPOSE 4000
 ENTRYPOINT ["dotnet", "WebApi.dll"]
